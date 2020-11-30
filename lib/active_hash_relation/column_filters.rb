@@ -129,14 +129,16 @@ module ActiveHashRelation::ColumnFilters
 
   def apply_leq_geq_le_ge_filters(resource, table_name, column, param)
     return resource.where("#{table_name}.#{column} = ?", param[:eq]) if param[:eq]
-
+        
     if !param[:leq].blank?
+      param[:leq] = param[:leq].to_time ? param[:leq].to_time.utc : param[:leq]
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} <= ?", param[:leq])
       else
         resource = resource.where("#{table_name}.#{column} <= ?", param[:leq])
       end
     elsif !param[:le].blank?
+      param[:le] = param[:le].to_time ? param[:le].to_time.utc : param[:le]
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} < ?", param[:le])
       else
@@ -145,12 +147,14 @@ module ActiveHashRelation::ColumnFilters
     end
 
     if !param[:geq].blank?
+      param[:geq] = param[:geq].to_time ? param[:geq].to_time.utc : param[:geq]
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} >= ?", param[:geq])
       else
         resource = resource.where("#{table_name}.#{column} >= ?", param[:geq])
       end
     elsif !param[:ge].blank?
+      param[:ge] = param[:ge].to_time ? param[:ge].to_time.utc : param[:ge]
       if @is_not
         resource = resource.where.not("#{table_name}.#{column} > ?", param[:ge])
       else
